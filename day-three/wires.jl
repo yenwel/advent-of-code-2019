@@ -1,15 +1,12 @@
 input = Array{String}(undef, 2)
-if size(ARGS)[1] > 0 && isfile(ARGS[1])        
-    println("reading file $(ARGS[1])")
+if size(ARGS)[1] > 0 && isfile(ARGS[1])   
     input = readlines(ARGS[1])
 end
-println("the input is $(input)")
 splitinput = map((x) -> String.(split(x,",")), input)
-println("the split input is $(splitinput)")
 
-buildpathaccumulate = function(result,dir)    
+buildwireaccumulate = function(result,dir) 
     direction = dir[1];
-    distance = parse(Int16,dir[2:end])
+    distance = parse(Int64,dir[2:end])
     if direction == 'R'
         push!(result , (result[end][1] + distance, result[end][2] ))
     elseif direction == 'L'
@@ -22,11 +19,46 @@ buildpathaccumulate = function(result,dir)
     return result
 end
 
-buildpath = function(input)
-    foldl(buildpathaccumulate, input; init= [(0,0)])
+buildwire = function(input)
+    foldl(buildwireaccumulate, input; init= [(0,0)])
 end
 
-path1 = buildpath(splitinput[1])
-path2 = buildpath(splitinput[2])
-println("path1 $(path1)")
-println("path2 $(path2)")
+wire1 = buildwire(splitinput[1])
+wire2 = buildwire(splitinput[2])
+println("wire1 $(wire1)")
+println("wire2 $(wire2)")
+
+isbetween = function(a,b,c)
+    (a <= b && b <= c) || (c <= b && b <= a)
+end
+
+intersections = function (start1, stop1, start2, stop2)
+    if isbetween(start1[1], start2[1], stop1[1]) && isbetween(start2[2],start1[2],stop2[2])
+        return (true, (start2[1],start1[2]))
+    elseif isbetween(start2[1], start1[1], stop2[1]) && isbetween(start1[2],start2[2],stop1[2])
+        return (true, (start1[1],start2[2]))
+    else
+        return (false, ())
+    end
+end
+
+findintersections = function(wireone,wiretwo)
+    result = Vector{Any}[]
+    foldl(
+        function(start1,stop1) 
+            foldl(
+                function(start2, stop2)  
+                    intersect = intersections(start1 ,stop1, start2, stop2)
+                    if intersect[1]
+                        push!(result, [intersect[2]])
+                    end
+                    return stop2
+                end,
+            wiretwo)
+            return stop1
+        end, 
+        wireone)
+    return result
+end
+
+println(findintersections(wire1,wire2))
