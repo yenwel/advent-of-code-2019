@@ -19,24 +19,31 @@ buildwireaccumulate = function(result,dir)
     return result
 end
 
-buildwire = function(input)
-    foldl(buildwireaccumulate, input; init= [(0,0)])
-end
+buildwire = (input) -> foldl(buildwireaccumulate, input; init= [(0,0)])
 
 wire1 = buildwire(splitinput[1])
 wire2 = buildwire(splitinput[2])
 println("wire1 $(wire1)")
 println("wire2 $(wire2)")
 
-isbetween = function(a,b,c)
-    (a <= b && b <= c) || (c <= b && b <= a)
-end
+isbetween = (a,b,c) -> (a <= b && b <= c) || (c <= b && b <= a)
+
+allsame(x) = all(y -> y == first(x), x)
 
 intersections = function (start1, stop1, start2, stop2)
+    # n intersections
+    if allsame([start1[1], stop1[1],start2[1],stop2[1]])
+        println("parallel horizontal")
+    elseif  allsame([start1[2], stop1[2],start2[2],stop2[2]])   
+        println("parallel vertical")
+    end
+    # 1 intersection
     if isbetween(start1[1], start2[1], stop1[1]) && isbetween(start2[2],start1[2],stop2[2])
-        return (true, (start2[1],start1[2]))
+        return (true, [(start2[1],start1[2])])
     elseif isbetween(start2[1], start1[1], stop2[1]) && isbetween(start1[2],start2[2],stop1[2])
-        return (true, (start1[1],start2[2]))
+        return (true, [(start1[1],start2[2])])
+
+    # no intersection
     else
         return (false, ())
     end
