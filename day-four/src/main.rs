@@ -2,7 +2,7 @@ use std::iter::FromIterator;
 
 const DOUBLES : [&'static str; 9] = ["11", "22", "33", "44", "55", "66", "77", "88", "99"];
 
-fn fitcriteria(password : i64) -> bool {
+fn fit_criteria(password : i64) -> bool {
     let password_string = password.to_string();
     let mut password_string_vector = Vec::from_iter(password_string.chars());
     password_string_vector.sort();
@@ -16,11 +16,11 @@ fn fitcriteria(password : i64) -> bool {
 }
 
 fn main() {
-    println!("{}", fitcriteria(111111));    
-    println!("{}", fitcriteria(122345));         
-    println!("{}", fitcriteria(111123));     
-    println!("{}", fitcriteria(135679));   
-    println!("{}", fitcriteria(223450));    
-    println!("{}", fitcriteria(123789));
-    println!("{}", (235741..706948).into_iter().filter(|x| fitcriteria(*x)).count());
+    println!("{}", fit_criteria(111111));    
+    println!("{}", fit_criteria(122345));         
+    println!("{}", fit_criteria(111123));     
+    println!("{}", fit_criteria(135679));   
+    println!("{}", fit_criteria(223450));    
+    println!("{}", fit_criteria(123789));
+    println!("{}", (235741..706948).into_iter().filter(|x| fit_criteria(*x)).count());
 }
