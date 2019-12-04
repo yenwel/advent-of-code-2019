@@ -50,8 +50,13 @@ intersections = function (start1, stop1, start2, stop2)
     end
 end
 
+
+
+manhattandistance = (a, b) -> abs(a[1]-b[1]) + abs(a[2] + b[2])
+
 findintersections = function(wireone,wiretwo)
     result = Tuple{Int64,Int64}[]
+    result2 = Tuple{Tuple{Int64, Int64}, Int64}[]
     foldl(
         function(start1,stop1) 
             foldl(
@@ -71,8 +76,6 @@ end
 
 intersections = findintersections(wire1,wire2)
 println(intersections)
-
-manhattandistance = (a, b) -> abs(a[1]-b[1]) + abs(a[2] + b[2])
 
 manhattandistancewireintersections = map((x) -> manhattandistance((0,0),x), intersections[2:end])
 
