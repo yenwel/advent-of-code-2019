@@ -5,19 +5,31 @@ input <- "3,225,1,225,6,6,1100,1,238,225,104,0,1101,65,39,225,2,14,169,224,101,-
 
 parser <- function(programstate, linenumber )
 {
-  print(linenumber)
-  print(programstate[linenumber])
+  if(linenumber == programstate[[2]])
+  {
+    currentop <- programstate[[1]][programstate[[2]]]
+    print(currentop)
+    if(currentop == 3 )
+    {
+      print(programstate[[1]][linenumber+1])
+      programstate[[1]][programstate[[1]][linenumber+1]] <- programstate[[3]]
+      programstate[[2]] <- linenumber + 2
+    }
+    else if(currentop == 4)
+    { 
+      #programstate[[4]] <- c( programstate[[4]], programstate[[1]][current[1]+1] )
+      programstate[[2]] <- linenumber + 2
+    }
+  }
   programstate
 }
 
 run_program <- function (input )
 {
   programvector <- unlist(strsplit(input,","))
-  #print(length(programvector))
   programlines <- 1:length(programvector)
-  #print(programvector)
-  print(programlines)
-  Reduce(parser, programlines, programvector, accumulate = TRUE)
+  Reduce(parser, programlines, list(programvector,1,"1",c()))#, accumulate = TRUE)
 }
 
 programrun <- run_program(input1)
+#print(programrun)
